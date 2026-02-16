@@ -1,0 +1,50 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+# Editor-based HTTP Client requests
+/httpRequests/
+
+# --- Security & Credentials ---
+.env
+.env.*
+!.env.example
+
+# --- Python Environment & Tools ---
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Local virtual environment (managed by uv)
+.venv/
+env/
+venv/
+ENV/
+
+# uv specific (ephemeral data)
+.uv/
+
+# Ruff / Linting / Testing caches
+.ruff_cache/
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# --- IDEs & System ---
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# --- Docker ---
+# We usually keep the Dockerfile/compose in git,
+# but ignore local state/logs.
+*.log
+docker-compose.override.yml
+
+# --- Project Specific ---
+# If you generate local test data or SQLite DBs
+*.sqlite
+*.db
+/data/temp/
