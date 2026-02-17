@@ -1,0 +1,18 @@
+[project]
+name = "agentic-triage-mcp"
+version = "0.1.0"
+description = "Agentic GitHub Issue Triage Agent using Pydantic AI and MCP"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.115.0",
+    "uvicorn>=0.32.0",
+    "pydantic-ai>=1.59.0",     # Core agent framework
+    "mcp>=1.0.0",              # Official Model Context Protocol SDK
+    "openai>=1.60.0",          # LLM connectivity
+    "python-dotenv>=1.0.1",    # Secret management
+    "httpx>=0.28.0",           # Async HTTP client for 2026 standards
+]
+
+[tool.uv]
+managed = true

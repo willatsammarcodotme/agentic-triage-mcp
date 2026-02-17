@@ -1,0 +1,16 @@
+# Stage 1: Base image is the MCP proxy server (Python 3.13 Alpine)
+# It provides the mcp-proxy binary and catatonit init process
+FROM ghcr.io/sparfenyuk/mcp-proxy:latest
+
+# Copy the GitHub MCP server binary from its scratch-based image.
+# The binary lives at /server/github-mcp-server (confirmed via docker inspect command below).
+# docker inspect ghcr.io/github/github-mcp-server --format '{{json .Config.Entrypoint}}'
+COPY --from=ghcr.io/github/github-mcp-server:latest /server/github-mcp-server /usr/local/bin/github-mcp-server
+
+# Ensure the binary is executable
+RUN chmod +x /usr/local/bin/github-mcp-server
+
+# Use catatonit as PID 1 init process (handles signal forwarding and zombie reaping),
+# which then launches mcp-proxy in server mode.
+# The compose `command` provides the flags: --host, --port, --pass-environment, and the subprocess.
+ENTRYPOINT ["catatonit", "--", "mcp-proxy"]
