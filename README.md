@@ -16,6 +16,15 @@ Instead of a linear script, this system uses a **Reasoning Graph** to handle the
 
 ---
 
+## 🧠 The Orchestration Philosophy: Deterministic Guardrails
+In a probabilistic system, the "Code" is no longer a set of instructions, but a set of constraints. This project implements:
+
+Strict Schema Validation: Leveraging Pydantic to ensure the LLM's "hallucinations" are caught by the type system before they reach the GitHub API.
+
+Functional Tool-Shadowing: The agent doesn't have "god mode." Its actions are restricted to the capabilities defined in the MCP schema, providing a natural security boundary.
+
+---
+
 ## 🚀 Key Features & ROI
 * **Autonomous Classification:** Evaluates incoming issues against a dynamic `rubric.md` to determine priority and severity.
 * **Contextual Interaction:** If an issue is missing logs, the agent autonomously requests them before a human ever sees the ticket.

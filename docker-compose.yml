@@ -1,13 +1,13 @@
 services:
-  # The "Hands": Official GitHub MCP Server
   mcp-github:
-    image: ghcr.io/github/github-mcp-server:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.mcp
     environment:
       - GITHUB_PERSONAL_ACCESS_TOKEN=${GITHUB_PAT}
-      # Restrict tools to only what the triage bot needs
-      - GITHUB_TOOLSETS=issues,repos,pull_requests
     ports:
       - "8080:8080"
+    command: "--pass-environment --host=0.0.0.0 --port=8080 -- github-mcp-server stdio"
     restart: always
 
   # The "Brain": Your Pydantic AI Bot
@@ -21,3 +21,17 @@ services:
     volumes:
       - ./src:/app/src
       - ./data:/app/data
+    ports:
+      - "8000:8000"
+    restart: always
+
+  # The gateway required for webhooks
+  webhook-gateway:
+    image: ngrok/ngrok:latest
+    environment:
+      - NGROK_AUTHTOKEN=${NGROK_TOKEN}
+    # each free account allows a single domain
+    command: http triage-bot:8000 --url=nonlibidinous-limpingly-billie.ngrok-free.dev
+    ports:
+      - "4040:4040"
+    restart: always
