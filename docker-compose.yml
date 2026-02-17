@@ -1,0 +1,37 @@
+services:
+  mcp-github:
+    build:
+      context: .
+      dockerfile: Dockerfile.mcp
+    environment:
+      - GITHUB_PERSONAL_ACCESS_TOKEN=${GITHUB_PAT}
+    ports:
+      - "8080:8080"
+    command: "--pass-environment --host=0.0.0.0 --port=8080 -- github-mcp-server stdio"
+    restart: always
+
+  # The "Brain": Your Pydantic AI Bot
+  triage-bot:
+    build: .
+    depends_on:
+      - mcp-github
+    environment:
+      - GITHUB_MCP_URL=http://mcp-github:8080/sse  # Network-based transport
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    volumes:
+      - ./src:/app/src
+      - ./data:/app/data
+    ports:
+      - "8000:8000"
+    restart: always
+
+  # The gateway required for webhooks
+  webhook-gateway:
+    image: ngrok/ngrok:latest
+    environment:
+      - NGROK_AUTHTOKEN=${NGROK_TOKEN}
+    # each free account allows a single domain
+    command: http triage-bot:8000 --url=nonlibidinous-limpingly-billie.ngrok-free.dev
+    ports:
+      - "4040:4040"
+    restart: always
