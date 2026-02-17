@@ -1,62 +1,30 @@
-# Agentic Triage MCP 🤖
+# Agentic GitHub Triage Bot
 
-### *The Autonomous Bridge between GitHub Issues and Enterprise Logic*
+Real-time issue triage using the Model Context Protocol (MCP) to decouple the GitHub toolset from the core agent logic. The bot's "hands" are interchangeable and the whole thing runs locally against real GitHub webhook events.
 
-This project demonstrates the transition from **Author of Code** to **Orchestrator of Probabilistic Systems**. It features an autonomous agent capable of multi-step reasoning, tool discovery, and high-fidelity action within the GitHub ecosystem.
+## How it works
 
----
+The GitHub MCP Server runs behind `mcp-proxy` to expose GitHub's toolset over SSE. Pydantic AI handles the agent logic and keeps LLM outputs type-safe. ngrok runs as a sidecar to forward real GitHub webhook events during development.
 
-## 🏗️ Architecture: The 2026 "Gold Standard"
-Instead of a linear script, this system uses a **Reasoning Graph** to handle the uncertainty of human-written support tickets.
+When an issue comes in, the agent evaluates it against a `rubric.md`, applies labels and priority, and requests missing information (like logs) before a human ever sees the ticket.
 
-* **The Brain:** **GPT-4o / Claude 3.5 Sonnet** optimized for complex tool-calling.
-* **The Orchestrator:** **Pydantic AI**. Implements type-safe agentic workflows with structured outputs.
-* **The Hands:** **GitHub MCP Server**. A standardized interface (Model Context Protocol) that allows the model to "see" issues and "write" comments/labels without custom API glue.
-* **The Environment:** **uv + Docker Compose**. High-performance Python project management paired with microservice orchestration.
+## Stack
 
----
+- **Pydantic AI** — type-safe agent logic and structured LLM outputs
+- **GitHub MCP Server** — standardized GitHub tooling over MCP
+- **mcp-proxy** — SSE transport layer for the MCP server
+- **Docker Compose** — single-command orchestration
 
-## 🧠 The Orchestration Philosophy: Deterministic Guardrails
-In a probabilistic system, the "Code" is no longer a set of instructions, but a set of constraints. This project implements:
+## Getting Started
 
-Strict Schema Validation: Leveraging Pydantic to ensure the LLM's "hallucinations" are caught by the type system before they reach the GitHub API.
+Create a `.env` file with your credentials:
+```env
+GITHUB_PAT=your_github_pat
+OPENAI_API_KEY=your_openai_api_key
+NGROK_TOKEN=your_ngrok_token
+```
 
-Functional Tool-Shadowing: The agent doesn't have "god mode." Its actions are restricted to the capabilities defined in the MCP schema, providing a natural security boundary.
-
----
-
-## 🚀 Key Features & ROI
-* **Autonomous Classification:** Evaluates incoming issues against a dynamic `rubric.md` to determine priority and severity.
-* **Contextual Interaction:** If an issue is missing logs, the agent autonomously requests them before a human ever sees the ticket.
-* **Deterministic Reliability:** Uses Pydantic to ensure all LLM outputs strictly adhere to your business schema.
-* **Observable Reasoning:** Features a "Thought Trace" showing the agent's internal chain-of-thought during tool invocation.
-
----
-
-## 🛠️ Tech Stack
-* **Language:** Python 3.12+ (managed by `uv`)
-* **Framework:** Pydantic AI
-* **Protocol:** Model Context Protocol (MCP)
-* **Infrastructure:** Docker, Docker Compose
-
----
-
-## 📈 Measurable Impact
-> "By automating the initial 15 minutes of issue triage—classification, labeling, and information gathering—this system reduces the Mean Time to Acknowledge (MTTA) by ~85%."
-
----
-
-## 🚦 Getting Started
-
-1. **Install uv**:
-   ```bash
-   curl -LsSf [https://astral.sh/uv/install.sh](https://astral.sh/uv/install.sh) | sh
-   ```
-
-2. Set up Environment:
-Create a `.env` file with your `GITHUB_PAT` and `OPENAI_API_KEY`.
-
-3. Spin up the Orchestration
-  ```bash
-   docker-compose up
-  ```
+Then:
+```bash
+docker compose up --build
+```
